@@ -8,8 +8,14 @@ class Flock {
   }
 
   void run() {
-    for (Boid b : boids) {
-      b.run(boids);  // Passing the entire list of boids to each boid individually
+    for (Boid b : this.boids) {
+      b.run(this.boids);  // Passing the entire list of boids to each boid individually
+    }
+  }
+  
+  void updateMaxSpeed(float s) {
+    for(Boid b : this.boids) {
+      b.maxspeed = s; 
     }
   }
 

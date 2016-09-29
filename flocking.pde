@@ -7,10 +7,12 @@ Loader loader;
 void refresh() {
   loader.refresh();
 }
+
 Flock flock;
 
 void setup() {
   size(640, 360);
+  pixelDensity(2);
   
   loader = new Loader();
   thread("refresh");
