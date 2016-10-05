@@ -3,15 +3,18 @@
  * modified from Flocking by Daniel Shiffman. Craig Reynold's boids on rules of avoidance, alignment, and coherence.
  */
 
+// class encapsulation
 Loader loader;
+// threading
 void refresh() {
   loader.refresh();
 }
 
 Flock flock;
+int N = 85;
 
 void setup() {
-  size(640, 360);
+  fullScreen();
   pixelDensity(2);
   
   loader = new Loader();
@@ -19,13 +22,16 @@ void setup() {
   
   flock = new Flock();
   // Add an initial set of boids into the system
-  for (int i = 0; i < 150; i++) {
+  for (int i = 0; i < N; i++) {
     flock.addBoid(new Boid(0,0));
   }
+  
+  background(0);
 }
 
 void draw() {
-  background(50);
+  fill(0, 12);
+  rect(0, 0, width, height); // make boids leave trail
   flock.run();
   
   if(millis() > loader.lastTime + loader.interval) {

@@ -11,10 +11,12 @@ class Loader {
     this.lastTime = millis();
     this.data = loadJSONObject(this.url);
     JSONArray entries = this.data.getJSONArray("results");
-    JSONObject lastEntry = entries.getJSONObject(entries.size() - 1);
-    float wind_speed_mph = lastEntry.getFloat("wind_speed_mph", 0);
-    if(wind_speed_mph > 0)
-      flock.updateMaxSpeed(wind_speed_mph);
-    println("refreshed");
+    if(entries != null && entries.size() > 0) {
+      JSONObject lastEntry = entries.getJSONObject(entries.size() - 1);
+      float wind_speed_mph = lastEntry.getFloat("wind_speed_mph", 0);
+      if(wind_speed_mph > 0)
+        flock.updateMaxSpeed(wind_speed_mph);
+      println("refreshed");
+    }
   }
 }

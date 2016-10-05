@@ -19,7 +19,7 @@ class Boid {
     velocity = new PVector(cos(angle), sin(angle));
 
     location = new PVector(x, y);
-    r = 2.0;
+    r = 4.0;
     maxspeed = 2;
     maxforce = 0.03;
   }
