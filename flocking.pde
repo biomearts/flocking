@@ -6,30 +6,43 @@
 // class encapsulation
 Loader loader;
 // threading
-void refresh() {
+void load_data() {
   loader.refresh();
 }
 
 Flock flock;
 int N = 85;
 
+boolean draw_axes = true;
+boolean draw_flow_dir = true;
+int axis_len, flow_dir_stem_len, flow_dir_tick_len;
+
 void setup() {
   fullScreen();
   pixelDensity(2);
-  
-  loader = new Loader();
-  thread("refresh");
-  
-  flock = new Flock();
-  // Add an initial set of boids into the system
-  for (int i = 0; i < N; i++) {
-    flock.addBoid(new Boid(0,0));
-  }
-  
   background(0);
+  axis_len = 100;
+  flow_dir_stem_len = min(width, height)/2;
+  flow_dir_tick_len = 15;
+  
+  flock = new Flock(); 
+  loader = new Loader();
+  thread("load_data"); // load data for the first time
 }
 
 void draw() {
+  // draw axes
+  if(draw_axes) {
+    pushStyle();
+      noFill();
+      strokeWeight(5);
+      stroke(255, 0, 0);
+      line(0, 0, axis_len, 0);
+      stroke(0, 255, 0);
+      line(0, 0, 0, axis_len);
+    popStyle();
+  }
+  
   fill(0, 12);
   rect(0, 0, width, height); // make boids leave trail
   flock.run();
@@ -39,7 +52,15 @@ void draw() {
   }
 }
 
-// Add a new boid into the System
 void mousePressed() {
-  flock.addBoid(new Boid(mouseX,mouseY));
+  flock.addBoid(mouseX, mouseY);
+}
+
+void keyPressed() {
+  if(key == '[') {
+    flock.controlSpeed(-0.1);
+  }
+  else if(key == ']') {
+    flock.controlSpeed(+0.1);
+  }
 }
