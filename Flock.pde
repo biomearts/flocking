@@ -9,10 +9,11 @@ class Flock {
   
   // system parameters
   float N = 85;
-  float default_size = 4;
+  float default_size = 8;
   float minspeed;
   float maxspeed;
   float maxforce;
+  int shape = 0;
 
   Flock() {
     boids = new ArrayList<Boid>(); // Initialize the ArrayList
@@ -56,10 +57,13 @@ class Flock {
     }
   }
   
+  void changeShape() {
+    shape = (shape + 1)%3;
+    println("[Flock] shape", shape);
+  }
   void controlSpeed(float s) {
     maxspeed = (maxspeed + s < minspeed ? minspeed : maxspeed + s);
     additional_speed += s;
-    
     println("[Flock] maxspeed", maxspeed);
     println("[Flock] flow speed", flow_speed, "additional speed", additional_speed);
   }
@@ -71,6 +75,7 @@ class Flock {
   }
   void updateFlowDirection(int d) {
     if(d > 0) {
+      d = d + NORTH;
       flow_rad = radians(d);
       flow_dir.x = cos(flow_rad);
       flow_dir.y = sin(flow_rad);

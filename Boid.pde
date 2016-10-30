@@ -14,8 +14,8 @@ class Boid {
     //float angle = random(TWO_PI);
     //velocity = new PVector(cos(angle), sin(angle)); // will work in Processing.js
     velocity = PVector.random2D();
-    acceleration = new PVector(0, 0);
-    r = flock.default_size;
+    acceleration = PVector.random2D();//new PVector(0, 0);
+    r = flock.default_size + random(-3, 3);
   }
 
   void run() {
@@ -80,13 +80,21 @@ class Boid {
     fill(255);
     noStroke();
     pushMatrix();
-      translate(location.x, location.y);
-      rotate(theta);
+    translate(location.x, location.y);
+    rotate(theta);
+    if(flock.shape == 0) {
+      ellipse(0, 0, r, r);
+    }
+    else if(flock.shape == 1) {
       beginShape(TRIANGLES);
-      vertex(0, -r*3);
-      vertex(-r, r*2);
-      vertex(r, r*2);
+      vertex(0, -r*2);
+      vertex(-r*0.5, 0);
+      vertex(r*0.5, 0);
       endShape();
+    }
+    else if(flock.shape == 2) {
+      shape(bird0, 0, 0, 64, 64);
+    }
     popMatrix();
   }
 

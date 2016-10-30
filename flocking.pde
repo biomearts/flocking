@@ -10,6 +10,9 @@ void load_data() {
   loader.refresh();
 }
 
+PShape bird0;
+
+int NORTH = -90; // north is UP by default
 Flock flock;
 int N = 85;
 
@@ -19,13 +22,16 @@ int axis_len, flow_dir_stem_len, flow_dir_tick_len;
 
 void setup() {
   fullScreen();
+  //size(1200,800);
   pixelDensity(2);
   background(0);
   axis_len = 100;
   flow_dir_stem_len = min(width, height)/2;
   flow_dir_tick_len = 15;
   
-  flock = new Flock(); 
+  bird0 = loadShape("bird0-01.svg");
+  
+  flock = new Flock();
   loader = new Loader();
   thread("load_data"); // load data for the first time
 }
@@ -48,7 +54,7 @@ void draw() {
   flock.run();
   
   if(millis() > loader.lastTime + loader.interval) {
-    thread("refresh");
+    thread("load_data");
   }
 }
 
@@ -62,5 +68,12 @@ void keyPressed() {
   }
   else if(key == ']') {
     flock.controlSpeed(+0.1);
+  }
+  else if(keyCode == 66) {
+    flock.changeShape();
+  }
+  else if(keyCode == 68) {
+    draw_axes = !draw_axes;
+    draw_flow_dir = !draw_flow_dir;
   }
 }
