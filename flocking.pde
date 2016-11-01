@@ -7,7 +7,13 @@
 Loader loader;
 // threading
 void load_data() {
-  loader.refresh();
+  try {
+    loader.refresh();
+  }
+  catch (Exception e) {
+    //e.printStackTrace();
+    println(e);
+  }
 }
 
 PShape bird0;
@@ -16,13 +22,15 @@ int NORTH = -90; // north is UP by default
 Flock flock;
 int N = 85;
 
-boolean draw_axes = true;
-boolean draw_flow_dir = true;
+boolean draw_axes = false;
+boolean draw_flow_dir = false;
 int axis_len, flow_dir_stem_len, flow_dir_tick_len;
 
+int tail = 94;
+
 void setup() {
-  fullScreen();
-  //size(1200,800);
+  //fullScreen();
+  size(900,600);
   pixelDensity(2);
   background(0);
   axis_len = 100;
@@ -49,7 +57,7 @@ void draw() {
     popStyle();
   }
   
-  fill(0, 12);
+  fill(0, 100-tail);
   rect(0, 0, width, height); // make boids leave trail
   flock.run();
   
@@ -62,17 +70,63 @@ void mousePressed() {
   flock.addBoid(mouseX, mouseY);
 }
 
+void controlTail(int i) {
+  if(tail + i >= 0 && tail + i <= 100) {
+    tail += i;
+    println("[global] tail", tail);
+  }
+}
+
+String MODE = "speed";
 void keyPressed() {
   if(key == '[') {
-    flock.controlSpeed(-0.1);
+    if(MODE == "speed") {
+      flock.controlSpeed(-0.1);
+    }
+    else if(MODE == "size") {
+      flock.controlSize(-0.1);
+    }
+    else if(MODE == "neighbor") {
+      flock.controlNeighbor(-2);
+    }
+    else if(MODE == "tail") {
+      controlTail(-1);
+    }
   }
   else if(key == ']') {
-    flock.controlSpeed(+0.1);
+    if(MODE == "speed") {
+      flock.controlSpeed(+0.1);
+    }
+    else if(MODE == "size") {
+      flock.controlSize(+0.1);
+    }
+    else if(MODE == "neighbor") {
+      flock.controlNeighbor(+2);
+    }
+    else if(MODE == "tail") {
+      controlTail(+1);
+    }
   }
-  else if(keyCode == 66) {
+  else if(keyCode == 83) { // S
+    MODE = "speed";
+    println("[global] mode speed");
+  }
+  else if(keyCode == 90) { // Z
+    MODE = "size";
+    println("[global] mode size");
+  }
+  else if(keyCode == 78) { // N
+    MODE = "neighbor";
+    println("[global] mode neighbor");
+  }
+  else if(keyCode == 84) { // T
+    MODE = "tail";
+    println("[global] mode tail");
+  }
+  else if(keyCode == 66) { // B
     flock.changeShape();
   }
-  else if(keyCode == 68) {
+  else if(keyCode == 68) { // D
     draw_axes = !draw_axes;
     draw_flow_dir = !draw_flow_dir;
   }

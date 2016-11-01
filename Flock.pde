@@ -9,11 +9,15 @@ class Flock {
   
   // system parameters
   float N = 85;
-  float default_size = 8;
-  float minspeed;
-  float maxspeed;
-  float maxforce;
+  float default_size = 10;
+  float size_multiplier = 1.0;
+  float minspeed = 0.1;
+  float maxspeed = 2;
+  float maxforce = 0.03;
   int shape = 0;
+  
+  float neighbordist = 50;
+  float seperation_multiplier = 1.75;
 
   Flock() {
     boids = new ArrayList<Boid>(); // Initialize the ArrayList
@@ -21,9 +25,6 @@ class Flock {
     flow_rad = 0;
     flow_speed = 0;
     additional_speed = 0;
-    minspeed = 0.1;
-    maxspeed = 2;
-    maxforce = 0.03;
     
     for(int i = 0; i < N; i++) {
       addBoid(0, 0);
@@ -60,6 +61,18 @@ class Flock {
   void changeShape() {
     shape = (shape + 1)%3;
     println("[Flock] shape", shape);
+  }
+  void controlSize(float z) {
+    if(size_multiplier + z > 0) {
+      size_multiplier += z;
+      println("[Flock] size", size_multiplier);
+    }
+  }
+  void controlNeighbor(int n) {
+    if(neighbordist + n > 0) {
+      neighbordist += n;
+      println("[Flock] neighbor dist", neighbordist);
+    }
   }
   void controlSpeed(float s) {
     maxspeed = (maxspeed + s < minspeed ? minspeed : maxspeed + s);

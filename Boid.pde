@@ -15,7 +15,7 @@ class Boid {
     //velocity = new PVector(cos(angle), sin(angle)); // will work in Processing.js
     velocity = PVector.random2D();
     acceleration = PVector.random2D();//new PVector(0, 0);
-    r = flock.default_size + random(-3, 3);
+    r = flock.default_size + random(-flock.default_size*0.5, flock.default_size*0.5);
   }
 
   void run() {
@@ -77,20 +77,20 @@ class Boid {
     //float theta = velocity.heading2D() + radians(90); // will work in Processing.js
     float theta = velocity.heading() + radians(90);
     
-    fill(255);
+    fill(0, 255, 255);
     noStroke();
     pushMatrix();
     translate(location.x, location.y);
     rotate(theta);
     if(flock.shape == 0) {
-      ellipse(0, 0, r, r);
+      beginShape(TRIANGLES);
+      vertex(0, -r*flock.size_multiplier*2);
+      vertex(-r*flock.size_multiplier*0.5, 0);
+      vertex(r*flock.size_multiplier*0.5, 0);
+      endShape();
     }
     else if(flock.shape == 1) {
-      beginShape(TRIANGLES);
-      vertex(0, -r*2);
-      vertex(-r*0.5, 0);
-      vertex(r*0.5, 0);
-      endShape();
+      ellipse(0, 0, r*flock.size_multiplier, r*flock.size_multiplier);
     }
     else if(flock.shape == 2) {
       shape(bird0, 0, 0, 64, 64);
@@ -100,16 +100,16 @@ class Boid {
 
   // Wraparound
   void borders() {
-    if (location.x < -r) location.x = width+r;
-    if (location.y < -r) location.y = height+r;
-    if (location.x > width+r) location.x = -r;
-    if (location.y > height+r) location.y = -r;
+    if (location.x < -r*flock.size_multiplier) location.x = width+r*flock.size_multiplier;
+    if (location.y < -r*flock.size_multiplier) location.y = height+r*flock.size_multiplier;
+    if (location.x > width+r*flock.size_multiplier) location.x = -r*flock.size_multiplier;
+    if (location.y > height+r*flock.size_multiplier) location.y = -r*flock.size_multiplier;
   }
 
   // Separation
   // Method checks for nearby boids and steers away
-  PVector separate () {
-    float desiredseparation = 25.0f;
+  PVector separate() {
+    float desiredseparation = r*flock.size_multiplier*flock.seperation_multiplier;
     PVector steer = new PVector(0, 0, 0);
     int count = 0;
     // For every boid in the system, check if it's too close
@@ -144,13 +144,12 @@ class Boid {
 
   // Alignment
   // For every nearby boid in the system, calculate the average velocity
-  PVector align () {
-    float neighbordist = 50;
+  PVector align() {
     PVector sum = new PVector(0, 0);
     int count = 0;
     for (Boid other : flock.boids) {
       float d = PVector.dist(location, other.location);
-      if ((d > 0) && (d < neighbordist)) {
+      if ((d > 0) && (d < flock.neighbordist)) {
         sum.add(other.velocity);
         count++;
       }
@@ -172,13 +171,12 @@ class Boid {
 
   // Cohesion
   // For the average location (i.e. center) of all nearby boids, calculate steering vector towards that location
-  PVector cohesion () {
-    float neighbordist = 50;
+  PVector cohesion() {
     PVector sum = new PVector(0, 0);   // Start with empty vector to accumulate all locations
     int count = 0;
     for (Boid other : flock.boids) {
       float d = PVector.dist(location, other.location);
-      if ((d > 0) && (d < neighbordist)) {
+      if ((d > 0) && (d < flock.neighbordist)) {
         sum.add(other.location); // Add location
         count++;
       }
