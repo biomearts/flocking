@@ -131,3 +131,15 @@ void keyPressed() {
     draw_flow_dir = !draw_flow_dir;
   }
 }
+/*
+
+D: toggle debug mode
+B: toggle boid shape
+S: change boid speed
+Z: change boid size
+N: change neighbor parameter
+T: change tail length
+[: decrease it
+]: increase it
+
+*/
