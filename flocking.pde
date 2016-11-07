@@ -30,7 +30,7 @@ int tail = 94;
 
 void setup() {
   //fullScreen();
-  size(900,600);
+  size(1400,900);
   pixelDensity(2);
   background(0);
   axis_len = 100;

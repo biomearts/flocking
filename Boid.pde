@@ -6,6 +6,7 @@ class Boid {
   PVector velocity;
   PVector acceleration;
   float r;
+  color c;
   // maxspeed and maxforce are now universally controlled by Flock
 
   Boid(float x, float y, Flock f) {
@@ -16,6 +17,9 @@ class Boid {
     velocity = PVector.random2D();
     acceleration = PVector.random2D();//new PVector(0, 0);
     r = flock.default_size + random(-flock.default_size*0.5, flock.default_size*0.5);
+    c = lerpColor(color(0,255,255), color(0,0,255), random(0,1));
+    // 2nd color: color(0,145,255) more subtle
+    //            color(0,0,255)   more variation
   }
 
   void run() {
@@ -77,7 +81,7 @@ class Boid {
     //float theta = velocity.heading2D() + radians(90); // will work in Processing.js
     float theta = velocity.heading() + radians(90);
     
-    fill(0, 255, 255);
+    fill(c);
     noStroke();
     pushMatrix();
     translate(location.x, location.y);
